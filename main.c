@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     //sets up initial table
     setTableRow(1,first);
     
-    
+    printf("\nfirst print\n");
     printTable(first);
     
     
@@ -66,12 +66,18 @@ int main(int argc, char** argv) {
     //can delete row by changing pointers (removes row 1)
     deleteRow(2,first);
     
+    printf("\nsecond print\n");
     printTable(first);
     
     char twoData[30];
     strcpy(twoData, "Has insert worked");
     insertRow(2,twoData,first);
+    
+    char fourData[30];
+    strcpy(fourData, "Has insert worked");
+    insertRow(4,fourData,first);
 
+    printf("\nthird print\n");
     printTable(first);
     
     freeTable(first);
@@ -169,6 +175,7 @@ void insertRow(int index,char Data[30], struct tableRow *inputtedPointer)
     insert->prevRow = temp;
     
     //previous node needs to point to insert
+    
     temp->nextRow = insert;
     
     //provided we are not at the end of the list then next row has previous node insert
