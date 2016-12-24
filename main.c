@@ -139,6 +139,9 @@ void insertRow(int index,char Data[30], struct tableRow *inputtedPointer)
 {
     struct tableRow *temp = inputtedPointer;
     
+    //insert needs to insert into the correct location
+    //currently seems to insert into the last position
+    
     while(temp->prevRow != NULL)
     {
         //make sure we are at the top of the list
