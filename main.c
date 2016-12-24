@@ -150,7 +150,7 @@ void insertRow(int index,char Data[30], struct tableRow *inputtedPointer)
     
     //temp is the previous row to one we want to insert
     
-    while(temp->index < index || temp->nextRow != NULL)
+    while(temp->index < (index - 1) && temp->nextRow != NULL)
     {
         temp = temp->nextRow;
     }
