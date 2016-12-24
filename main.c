@@ -148,21 +148,30 @@ void insertRow(int index,char Data[30], struct tableRow *inputtedPointer)
         temp = temp->prevRow;
     }
     
+    //temp is the previous row to one we want to insert
+    
     while(temp->index < index || temp->nextRow != NULL)
     {
         temp = temp->nextRow;
     }
     
+    //inset is a brand new row to be slid into
     struct tableRow *insert = malloc(sizeof(*insert));
+    //next temp is the row after where we want to insert
     struct tableRow *nextTemp = temp->nextRow;
     
+    //get the data and put it into our new row
     insert->index = index;
     strcpy(insert->Data, Data);
+    
+    //inserts pointers get set up
     insert->nextRow = nextTemp;
     insert->prevRow = temp;
     
+    //previous node needs to point to insert
     temp->nextRow = insert;
     
+    //provided we are not at the end of the list then next row has previous node insert
     if (nextTemp != NULL)
     {
        nextTemp->prevRow = insert;
