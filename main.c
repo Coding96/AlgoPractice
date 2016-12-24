@@ -1,0 +1,207 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.c
+ * Author: edward
+ *
+ * Created on 20 December 2016, 03:38
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct tableRow{
+    int index;
+    char Data[30];
+    struct tableRow * nextRow;
+    struct tableRow * prevRow;
+};
+
+//function declartion
+void setTableRow(int index, struct tableRow *inputtedPointer);
+//takes index needed and any point in the linked list
+struct tableRow* getByIndex(int index, struct tableRow *inputtedPointer);
+//removes by index from the table
+void deleteRow(int index, struct tableRow *inputtedPointer);
+//prints the current table
+void printTable(struct tableRow *inputtedPointer);
+//frees the table
+void freeTable(struct tableRow *inputtedPointer);
+//inserts a row given an index data and any point in the tree {not quite working}
+void insertRow(int index,char Data[30], struct tableRow *inputtedPointer);
+
+int main(int argc, char** argv) {
+    
+    struct tableRow *first = malloc(sizeof(*first));
+    
+    struct tableRow *second = malloc(sizeof(*second));
+    
+    struct tableRow *third = malloc(sizeof(*third));
+    
+    first->nextRow = second;
+    first->prevRow = NULL;
+    
+    second->nextRow = third;
+    second->prevRow = first;
+    
+    third->nextRow = NULL;
+    third->prevRow = second;
+   
+    //sets up initial table
+    setTableRow(1,first);
+    
+    
+    printTable(first);
+    
+    
+    //gets by index for convience
+    //getByIndex(1,first)
+    
+    //can delete row by changing pointers (removes row 1)
+    deleteRow(2,first);
+    
+    printTable(first);
+    
+    char twoData[30];
+    strcpy(twoData, "Has insert worked");
+    insertRow(2,twoData,first);
+
+    printTable(first);
+    
+    freeTable(first);
+    return (EXIT_SUCCESS);
+}
+
+void setTableRow(int index, struct tableRow *inputtedPointer)
+{
+    if (inputtedPointer->nextRow == NULL)
+    {
+        inputtedPointer->index = index;
+        strcpy(inputtedPointer->Data,"next row is now null");
+    }
+    else
+    {
+        inputtedPointer->index = index;
+        strcpy(inputtedPointer->Data,"next row not null");
+        setTableRow(index+1,inputtedPointer->nextRow);
+    }
+    
+}
+
+//takes index needed and any point in the linked list
+struct tableRow* getByIndex(int index, struct tableRow *inputtedPointer)
+{
+    struct tableRow *temp = inputtedPointer;
+    
+    while(temp->prevRow != NULL)
+    {
+        //make sure we are at the top of the list
+        temp = temp->prevRow;
+    }
+    
+    while(temp != NULL)
+    {
+        if(temp->index == index)
+        {
+            break;
+        }
+        temp = temp->nextRow;
+    }
+    
+    return temp;
+        
+}
+
+void deleteRow(int index, struct tableRow *inputtedPointer)
+{
+    struct tableRow *temp = getByIndex(index, inputtedPointer);
+    
+    struct tableRow *prevTemp = temp->prevRow;
+    struct tableRow *nextTemp = temp->nextRow;
+    
+    if(prevTemp != NULL)
+    {
+        prevTemp->nextRow = nextTemp;
+    }
+    if(nextTemp != NULL)
+    {
+        nextTemp->prevRow = prevTemp;
+    }
+}
+
+void insertRow(int index,char Data[30], struct tableRow *inputtedPointer)
+{
+    struct tableRow *temp = inputtedPointer;
+    
+    while(temp->prevRow != NULL)
+    {
+        //make sure we are at the top of the list
+        temp = temp->prevRow;
+    }
+    
+    while(temp->index < index || temp->nextRow != NULL)
+    {
+        temp = temp->nextRow;
+    }
+    
+    struct tableRow *insert = malloc(sizeof(*insert));
+    struct tableRow *nextTemp = temp->nextRow;
+    
+    insert->index = index;
+    strcpy(insert->Data, Data);
+    insert->nextRow = nextTemp;
+    insert->prevRow = temp;
+    
+    temp->nextRow = insert;
+    
+    if (nextTemp != NULL)
+    {
+       nextTemp->prevRow = insert;
+    }
+    
+    
+    
+    
+}
+
+void printTable(struct tableRow *inputtedPointer)
+{
+    struct tableRow *temp = inputtedPointer;
+     
+    while(temp->prevRow != NULL)
+    {
+        //make sure we are at the top of the list
+        temp = temp->prevRow;
+    }
+    
+    while(temp != NULL)
+    {
+        printf("index %d, Data %s\n",temp->index,temp->Data);
+        temp = temp->nextRow;
+    }
+}
+
+void freeTable(struct tableRow *inputtedPointer)
+{
+    struct tableRow *temp = inputtedPointer;
+    struct tableRow *newTemp = temp;
+     
+    while(temp->prevRow != NULL)
+    {
+        //make sure we are at the top of the list
+        temp = temp->prevRow;
+    }
+    
+    while(temp != NULL)
+    {
+        newTemp = temp->nextRow;
+        free(temp);
+        temp = newTemp;
+    }
+}
