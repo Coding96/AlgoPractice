@@ -80,6 +80,10 @@ int main(int argc, char** argv) {
     printf("\nthird print\n");
     printTable(first);
     
+    printf("\nfourth print\n");
+    setTableRow(1,first);
+    printTable(first);
+    
     freeTable(first);
     return (EXIT_SUCCESS);
 }
